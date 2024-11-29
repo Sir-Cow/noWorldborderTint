@@ -8,10 +8,10 @@
 		"Sir_Cow"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "",
+		"sources": "https://github.com/Sir-Cow/noWorldborderTint"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/no-worldborder-tint/icon.png",
 	"environment": "*",
 	"entrypoints": {
