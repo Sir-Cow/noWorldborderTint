@@ -4,7 +4,7 @@ No Worldborder Tint is a mod that removes the red vignette tint when close to a 
 ## Download
 [Modrinth](https://modrinth.com/mod/noworldbordertint) | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/no-worldborder-tint)
 
-Currently only for Fabric 1.21.3, It is planned to backport to more versions and forge
+It is planned to backport to more versions and forge at future dates
 
 ## Preview
 ![before](https://github.com/user-attachments/assets/d74ca130-6782-473b-bd5d-7d5c935d6adb)
