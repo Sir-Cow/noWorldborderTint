@@ -1,10 +1,10 @@
 package sircow.noworldbordertint.mixin;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Final;
@@ -22,20 +22,35 @@ public class GuiMixin {
     private static ResourceLocation VIGNETTE_LOCATION;
     @Inject(method = "renderVignette", at = @At("HEAD"), cancellable = true)
     private void sir_cow$modifyVignette(GuiGraphics guiGraphics, Entity entity, CallbackInfo ci) {
-        int i;
-        float h = this.vignetteBrightness;
-        h = Mth.clamp(h, 0.0F, 1.0F);
-        i = ARGB.colorFromFloat(1.0F, h, h, h);
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(
+                GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
+        );
+
+        float f2 = this.vignetteBrightness;
+        f2 = Mth.clamp(f2, 0.0F, 1.0F);
+        guiGraphics.setColor(f2, f2, f2, 1.0F);
 
         guiGraphics.blit(
-                RenderType::vignette,
-                VIGNETTE_LOCATION, 0, 0, 0.0F, 0.0F,
+                VIGNETTE_LOCATION,
+                0,
+                0,
+                -90,
+                0.0F,
+                0.0F,
                 guiGraphics.guiWidth(),
                 guiGraphics.guiHeight(),
                 guiGraphics.guiWidth(),
-                guiGraphics.guiHeight(),
-                i
+                guiGraphics.guiHeight()
         );
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+        guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.disableBlend();
+
         ci.cancel();
     }
 }
