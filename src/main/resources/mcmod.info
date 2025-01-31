@@ -1,0 +1,18 @@
+[
+  {
+    "modid": "${modid}",
+    "name": "NoWorldborderTint",
+    "description": "Removes the world border vignette tint",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/Sir-Cow/noWorldborderTint",
+    "updateUrl": "",
+    "authorList": [
+      "Sir_Cow"
+    ],
+    "credits": "",
+    "logoFile": "icon.png",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
