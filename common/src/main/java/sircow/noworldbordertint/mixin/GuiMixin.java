@@ -2,7 +2,7 @@ package sircow.noworldbordertint.mixin;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
@@ -28,7 +28,7 @@ public class GuiMixin {
         i = ARGB.colorFromFloat(1.0F, h, h, h);
 
         guiGraphics.blit(
-                RenderType::vignette,
+                RenderPipelines.VIGNETTE,
                 VIGNETTE_LOCATION, 0, 0, 0.0F, 0.0F,
                 guiGraphics.guiWidth(),
                 guiGraphics.guiHeight(),
