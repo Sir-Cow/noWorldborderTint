@@ -2,7 +2,7 @@ modLoader = "javafml"
 loaderVersion = "${forge_loader_version_range}"
 license = "${license}"
 #issueTrackerURL=
-#clientSideOnly=
+clientSideOnly=true
 [[mods]]
 modId = "${mod_id}"
 version = "${version}"
