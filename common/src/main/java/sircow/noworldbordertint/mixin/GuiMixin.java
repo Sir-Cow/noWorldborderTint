@@ -3,7 +3,7 @@ package sircow.noworldbordertint.mixin;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +19,7 @@ public class GuiMixin {
     @Shadow
     public float vignetteBrightness;
     @Shadow @Final
-    private static ResourceLocation VIGNETTE_LOCATION;
+    private static Identifier VIGNETTE_LOCATION;
     @Inject(method = "renderVignette", at = @At("HEAD"), cancellable = true)
     private void sir_cow$modifyVignette(GuiGraphics guiGraphics, Entity entity, CallbackInfo ci) {
         int i;

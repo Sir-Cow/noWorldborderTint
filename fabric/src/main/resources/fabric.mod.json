@@ -24,8 +24,7 @@
         "noworldbordertint.fabric.mixins.json"
     ],
     "depends": {
-        "fabricloader": ">=${fabric_loader_version}",
-        "fabric-api": "*",
+        "fabricloader": ">=0.18.0",
         "minecraft": "${minecraft_version}",
         "java": ">=${java_version}"
     },
