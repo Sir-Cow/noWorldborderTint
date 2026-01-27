@@ -1,15 +1,15 @@
 modLoader = "javafml"
 loaderVersion = "${neoforge_loader_version_range}"
 license = "${license}"
-issueTrackerURL="https://github.com/Sir-Cow/noWorldborderTint/issues"
+issueTrackerURL = "https://github.com/Sir-Cow/noWorldborderTint/issues"
 [[mods]]
 modId = "${mod_id}"
 version = "${version}"
 displayName = "${mod_name}"
-#updateJSONURL=
-displayURL="https://github.com/Sir-Cow/noWorldborderTint"
-logoFile="icon.png"
-credits="${credits}"
+updateJSONURL = "https://updates.blamejared.com/get?n=no-worldborder-tint&gv=${minecraft_version}&ml=neoforge"
+displayURL = "https://github.com/Sir-Cow/noWorldborderTint"
+logoFile = "icon.png"
+credits = "${credits}"
 authors = "${mod_author}"
 description = '''${description}'''
 [[mixins]]
@@ -24,7 +24,7 @@ ordering = "NONE"
 side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "minecraft"
-type="required"
+type = "required"
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"

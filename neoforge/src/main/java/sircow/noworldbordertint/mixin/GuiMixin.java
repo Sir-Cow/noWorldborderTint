@@ -16,10 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Gui.class)
 public class GuiMixin {
-    @Shadow
-    public float vignetteBrightness;
-    @Shadow @Final
-    private static Identifier VIGNETTE_LOCATION;
+    @Shadow public float vignetteBrightness;
+    @Shadow @Final private static Identifier VIGNETTE_LOCATION;
     @Inject(method = "renderVignette", at = @At("HEAD"), cancellable = true)
     private void sir_cow$modifyVignette(GuiGraphics guiGraphics, Entity entity, CallbackInfo ci) {
         int i;

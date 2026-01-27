@@ -1,6 +1,7 @@
 plugins {
     id 'multiloader-loader'
     id 'fabric-loom'
+    id 'com.gradleup.shadow' version '9.3.1'
 }
 
 repositories {
@@ -8,6 +9,16 @@ repositories {
         name = "Terraformers"
         url = "https://maven.terraformersmc.com/"
     }
+
+    maven {
+        name = "MoulConfig"
+        url = "https://maven.notenoughupdates.org/releases/"
+    }
+}
+
+configurations {
+    shadowModImpl
+    modImplementation.extendsFrom(shadowModImpl)
 }
 
 dependencies {
@@ -18,7 +29,31 @@ dependencies {
     }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+    modImplementation "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
+    shadowModImpl(libs.moulconfig) {
+        exclude group: "org.jetbrains.kotlin"
+        exclude group: "org.jetbrains.kotlinx"
+    }
+    include(libs.moulconfig)
+}
+
+tasks.shadowJar {
+    configurations = [project.configurations.shadowModImpl]
+    relocate "io.github.notenoughupdates.moulconfig", "sircow.noworldbordertint.deps.moulconfig"
+    archiveClassifier = 'shadow'
+    exclude "META-INF/versions/**"
+    mergeServiceFiles()
+}
+
+remapJar {
+    dependsOn tasks.shadowJar
+    inputFile = tasks.shadowJar.archiveFile
+    archiveClassifier = ""
+}
+
+tasks.jar {
+    archiveClassifier = "nodeps"
 }
 
 loom {
@@ -26,15 +61,13 @@ loom {
     if (aw.exists()) {
         accessWidenerPath.set(aw)
     }
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
-    }
     runs {
         client {
             client()
             setConfigName('Fabric Client')
             ideConfigGenerated(true)
             runDir('runs/client')
+            programArgs "--tweakClass", "io.github.notenoughupdates.moulconfig.tweaker.DevelopmentResourceTweaker"
         }
         server {
             server()

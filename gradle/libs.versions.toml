@@ -1,0 +1,6 @@
+[versions]
+# https://github.com/NotEnoughUpdates/MoulConfig/tags
+moulconfig = "4.3.0-beta"
+
+[libraries]
+moulconfig = { module = "org.notenoughupdates.moulconfig:modern-1.21.11", version.ref = "moulconfig" }
