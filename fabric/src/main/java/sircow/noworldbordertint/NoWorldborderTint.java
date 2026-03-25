@@ -1,7 +1,6 @@
 package sircow.noworldbordertint;
 
 import com.mojang.brigadier.Command;
-import io.github.notenoughupdates.moulconfig.managed.ManagedConfig;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -10,9 +9,7 @@ import sircow.noworldbordertint.config.ConfigGuiManager;
 import sircow.noworldbordertint.config.ConfigManager;
 import sircow.noworldbordertint.config.NWTConfig;
 
-import java.io.File;
-
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
 
 public class NoWorldborderTint implements ModInitializer {
     public static NWTConfig config;

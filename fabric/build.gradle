@@ -1,7 +1,6 @@
 plugins {
     id 'multiloader-loader'
-    id 'fabric-loom'
-    id 'com.gradleup.shadow' version '9.3.1'
+    id 'net.fabricmc.fabric-loom'
 }
 
 repositories {
@@ -16,44 +15,18 @@ repositories {
     }
 }
 
-configurations {
-    shadowModImpl
-    modImplementation.extendsFrom(shadowModImpl)
-}
-
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
-    }
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-    modImplementation "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
-    shadowModImpl(libs.moulconfig) {
-        exclude group: "org.jetbrains.kotlin"
-        exclude group: "org.jetbrains.kotlinx"
-    }
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+    implementation "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
+    implementation(libs.moulconfig)
     include(libs.moulconfig)
 }
 
-tasks.shadowJar {
-    configurations = [project.configurations.shadowModImpl]
-    relocate "io.github.notenoughupdates.moulconfig", "sircow.noworldbordertint.deps.moulconfig"
-    archiveClassifier = 'shadow'
-    exclude "META-INF/versions/**"
-    mergeServiceFiles()
-}
-
-remapJar {
-    dependsOn tasks.shadowJar
-    inputFile = tasks.shadowJar.archiveFile
-    archiveClassifier = ""
-}
-
 tasks.jar {
-    archiveClassifier = "nodeps"
+    archiveClassifier.set("")
 }
 
 loom {
@@ -92,13 +65,6 @@ sourceSets.configureEach {
             attributes {
                 attribute(loaderAttribute, 'fabric')
             }
-        }
-    }
-}
-loom.remapConfigurations.configureEach {
-    configurations.named(it.name) {
-        attributes {
-            attribute(loaderAttribute, 'fabric')
         }
     }
 }

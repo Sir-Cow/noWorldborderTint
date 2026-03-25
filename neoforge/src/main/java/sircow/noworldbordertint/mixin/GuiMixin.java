@@ -1,7 +1,7 @@
 package sircow.noworldbordertint.mixin;
 
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
@@ -18,20 +18,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GuiMixin {
     @Shadow public float vignetteBrightness;
     @Shadow @Final private static Identifier VIGNETTE_LOCATION;
-    @Inject(method = "renderVignette", at = @At("HEAD"), cancellable = true)
-    private void sir_cow$modifyVignette(GuiGraphics guiGraphics, Entity entity, CallbackInfo ci) {
+    @Inject(method = "extractVignette", at = @At("HEAD"), cancellable = true)
+    private void sir_cow$modifyVignette(GuiGraphicsExtractor graphics, Entity camera, CallbackInfo ci) {
         int i;
         float h = this.vignetteBrightness;
         h = Mth.clamp(h, 0.0F, 1.0F);
         i = ARGB.colorFromFloat(1.0F, h, h, h);
 
-        guiGraphics.blit(
+        graphics.blit(
                 RenderPipelines.VIGNETTE,
                 VIGNETTE_LOCATION, 0, 0, 0.0F, 0.0F,
-                guiGraphics.guiWidth(),
-                guiGraphics.guiHeight(),
-                guiGraphics.guiWidth(),
-                guiGraphics.guiHeight(),
+                graphics.guiWidth(),
+                graphics.guiHeight(),
+                graphics.guiWidth(),
+                graphics.guiHeight(),
                 i
         );
         ci.cancel();
