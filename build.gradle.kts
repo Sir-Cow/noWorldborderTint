@@ -5,7 +5,7 @@ plugins {
     java
     id("gg.essential.loom") version "0.10.0.+"
     id("dev.architectury.architectury-pack200") version "0.1.3"
-    id("com.gradleup.shadow") version "9.0.0-beta6"
+    id("com.gradleup.shadow") version "9.4.2"
 }
 
 // Constants:
@@ -69,7 +69,7 @@ dependencies {
         exclude("org.spongepowered")
     }
 
-    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT")
+    annotationProcessor("org.spongepowered:mixin:0.8.7-SNAPSHOT")
 }
 
 // Tasks:
