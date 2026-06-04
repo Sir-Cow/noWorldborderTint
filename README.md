@@ -2,7 +2,9 @@
 No Worldborder Tint is a mod that removes the red vignette tint when close to a world border
 
 ## Download
-[Modrinth](https://modrinth.com/mod/noworldbordertint) | [Curseforge](https://www.curseforge.com/minecraft/mc-mods/no-worldborder-tint)
+| Modrinth | CurseForge |
+|:---:|:---:|
+| <div align="center">[![Modrinth Downloads](https://img.shields.io/modrinth/dt/CSMcTcKO?logo=modrinth)](https://modrinth.com/project/CSMcTcKO)</div> | <div align="center">[![CurseForge Downloads](https://cf.way2muchnoise.eu/full_1149847.svg)](https://www.curseforge.com/minecraft/mc-mods/no-worldborder-tint)</div> |
 
 ## Preview
 ![before](https://github.com/user-attachments/assets/d74ca130-6782-473b-bd5d-7d5c935d6adb)
