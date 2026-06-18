@@ -33,7 +33,7 @@ artifacts {
 }
 
 def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
-['apiElements', 'runtimeElements'].each { variant ->
+['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements'].each { variant ->
     configurations.named(variant) {
         attributes {
             attribute(loaderAttribute, 'common')
