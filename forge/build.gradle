@@ -63,6 +63,7 @@ tasks.named('jar', Jar) {
 
 jarJar.register() {
     archiveClassifier = null
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
