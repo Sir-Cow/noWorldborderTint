@@ -23,6 +23,6 @@ public class ConfigGuiManager {
             }
         };
 
-        Minecraft.getInstance().setScreen(screen);
+        Minecraft.getInstance().gui.setScreen(screen);
     }
 }

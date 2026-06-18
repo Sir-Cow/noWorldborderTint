@@ -27,9 +27,7 @@ public class NoWorldborderTint implements ModInitializer {
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             Command<FabricClientCommandSource> action = context -> {
-                Minecraft.getInstance().execute(() -> {
-                    ConfigGuiManager.openConfigGui(null);
-                });
+                Minecraft.getInstance().execute(() -> ConfigGuiManager.openConfigGui(null));
                 return 1;
             };
 

@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class ConfigManager {
-    private static final File configFile = new File("config/noworldbordertint/noworldbordertint.json");
+    private static final File configFile = new File("config/noworldbordertint.json");
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
     public MoulConfigProcessor<NWTConfig> processor;
 
