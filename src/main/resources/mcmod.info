@@ -6,7 +6,7 @@
     "version": "${version}",
     "mcversion": "${mcversion}",
     "url": "https://github.com/Sir-Cow/noWorldborderTint",
-    "updateUrl": "",
+    "updateUrl": "https://api.modrinth.com/updates/CSMcTcKO/forge_updates.json",
     "authorList": [
       "Sir_Cow"
     ],

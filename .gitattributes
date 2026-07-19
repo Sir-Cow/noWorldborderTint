@@ -16,4 +16,3 @@ gradle/wrapper/* linguist-vendored
 *.cfg text eol=lf
 *.jks binary
 *.ogg binary
-

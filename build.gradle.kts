@@ -1,41 +1,34 @@
 import org.apache.commons.lang3.SystemUtils
 
 plugins {
-    idea
     java
-    id("gg.essential.loom") version "0.10.0.+"
+    id("gg.essential.loom") version "1.15.50"
     id("dev.architectury.architectury-pack200") version "0.1.3"
-    id("com.gradleup.shadow") version "9.4.2"
+    id("com.gradleup.shadow") version "9.4.+"
 }
 
-// Constants:
-val baseGroup: String by project
-val mcVersion: String by project
-val version: String by project
+val baseGroup = project.property("baseGroup").toString()
+val mcVersion = project.property("mcVersion").toString()
+val version = project.property("version").toString()
 val mixinGroup = "$baseGroup.mixin"
-val modid: String by project
+val modid = project.property("modid").toString()
 
-// Toolchains:
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(8))
 }
 
-// Minecraft configuration:
 loom {
-    launchConfigs {
-        "client" {
-            property("mixin.debug", "true")
-            arg("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker")
-        }
-    }
-
     runConfigs {
         "client" {
+            property("mixin.debug", "true")
+            programArgs("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker")
+
             if (SystemUtils.IS_OS_MAC_OSX) {
                 // This argument causes a crash on macOS
                 vmArgs.remove("-XstartOnFirstThread")
             }
         }
+
         remove(getByName("server"))
     }
 
@@ -49,13 +42,16 @@ loom {
     }
 }
 
-// Dependencies:
+sourceSets.main {
+    output.setResourcesDir(sourceSets.main.flatMap { it.java.classesDirectory })
+}
+
 repositories {
     mavenCentral()
     maven("https://repo.spongepowered.org/maven/")
 }
 
-val shadowImpl: Configuration by configurations.creating {
+val shadowImpl = configurations.create("shadowImpl") {
     configurations.implementation.get().extendsFrom(this)
 }
 
@@ -68,17 +64,14 @@ dependencies {
         isTransitive = false
         exclude("org.spongepowered")
     }
-
-    annotationProcessor("org.spongepowered:mixin:0.8.7-SNAPSHOT")
 }
 
-// Tasks:
 tasks.withType(JavaCompile::class) {
     options.encoding = "UTF-8"
 }
 
 tasks.withType(org.gradle.jvm.tasks.Jar::class) {
-    archiveBaseName.set(modid)
+    archiveFileName.set("$modid-forge-$version+$mcVersion.jar")
     manifest.attributes.run {
         this["FMLCorePluginContainsFMLMod"] = "true"
         this["ForceLoadAsMod"] = "true"
@@ -98,11 +91,10 @@ tasks.processResources {
     }
 }
 
-
-val remapJar by tasks.named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
+val remapJar = tasks.named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
     archiveClassifier.set("")
     from(tasks.shadowJar)
-    input.set(tasks.shadowJar.get().archiveFile)
+    inputFile.set(tasks.shadowJar.get().archiveFile)
 }
 
 tasks.jar {

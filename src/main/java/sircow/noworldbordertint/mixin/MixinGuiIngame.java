@@ -18,15 +18,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiIngame.class)
 public class MixinGuiIngame {
-    @Shadow
-    public float prevVignetteBrightness;
-    @Shadow @Final
-    protected Minecraft mc;
-    @Shadow @Final
-    protected static ResourceLocation vignetteTexPath;
+    @Shadow public float prevVignetteBrightness;
+    @Shadow @Final protected Minecraft mc;
+    @Shadow @Final protected static ResourceLocation vignetteTexPath;
 
     @Inject(method = "renderVignette", at = @At("HEAD"), cancellable = true)
-    private void sir_cow$modifyVignette(float lightLevel, ScaledResolution scaledRes, CallbackInfo ci) {
+    private void nwbt$modifyVignette(float lightLevel, ScaledResolution scaledRes, CallbackInfo ci) {
         lightLevel = 1.0F - lightLevel;
         lightLevel = MathHelper.clamp_float(lightLevel, 0.0F, 1.0F);
 
