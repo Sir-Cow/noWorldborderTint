@@ -4,9 +4,14 @@
   "package": "sircow.noworldbordertint.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
-  "client": [],
+  "client": [
+    "GuiMixin",
+  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
   }
 }
