@@ -4,7 +4,9 @@
   "package": "sircow.noworldbordertint.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
-  "client": [],
+  "client": [
+    "HudMixin"
+  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1

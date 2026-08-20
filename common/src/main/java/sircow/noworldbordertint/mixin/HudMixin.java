@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import sircow.noworldbordertint.NoWorldborderTint;
+
+import sircow.noworldbordertint.CommonClass;
 
 @Mixin(Hud.class)
 public class HudMixin {
@@ -22,7 +23,7 @@ public class HudMixin {
 
     @Inject(method = "extractVignette", at = @At("HEAD"), cancellable = true)
     private void nwbt$modifyVignette(GuiGraphicsExtractor graphics, Entity camera, CallbackInfo ci) {
-        if (NoWorldborderTint.config.mainCategory.hideTint) {
+        if (CommonClass.config.mainCategory.hideTint) {
             float brightness = Mth.clamp(this.vignetteBrightness, 0.0F, 1.0F);
             int color = ARGB.colorFromFloat(1.0F, brightness, brightness, brightness);
 
