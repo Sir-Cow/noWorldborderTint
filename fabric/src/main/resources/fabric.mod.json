@@ -8,8 +8,9 @@
         "${mod_author}"
     ],
     "contact": {
-        "homepage": "",
-        "sources": "https://github.com/Sir-Cow/noWorldborderTint"
+        "homepage": "https://modrinth.com/mod/noWorldborderTint",
+        "sources": "https://github.com/Sir-Cow/noWorldborderTint",
+        "issues": "https://github.com/Sir-Cow/noWorldborderTint/issues"
     },
     "license": "${license}",
     "icon": "icon.png",
@@ -27,17 +28,17 @@
         "noworldbordertint.fabric.mixins.json"
     ],
     "depends": {
-        "fabricloader": ">=0.18.0",
+        "fabricloader": ">=${fabric_loader_version}",
         "fabric-api": "*",
-        "minecraft": "${minecraft_version}",
-        "java": ">=${java_version}",
-        "fabric-language-kotlin": ">=1.13.8"
-    },
-    "suggests": {
-        "another-mod": "*"
+        "minecraft": "~${minecraft_version}",
+        "java": ">=${java_version}"
     },
     "custom": {
         "modmenu": {
+            "links": {
+                "modmenu.modrinth": "https://modrinth.com/mod/noWorldborderTint",
+                "modmenu.curseforge": "https://curseforge.com/minecraft/mc-mods/no-worldborder-tint"
+            },
             "update_checker": true
         }
     }

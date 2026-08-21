@@ -1,104 +1,114 @@
 plugins {
     id 'multiloader-loader'
-    id 'fabric-loom'
-    id 'com.gradleup.shadow' version '9.3.1'
+    id 'net.fabricmc.fabric-loom-remap'
+    id 'com.gradleup.shadow' version '9.6.1'
+}
+
+configurations {
+    shade
+    moulconfigClean {
+        canBeResolved = true
+        canBeConsumed = false
+    }
 }
 
 repositories {
     maven {
-        name = "Terraformers"
-        url = "https://maven.terraformersmc.com/"
-    }
-
-    maven {
         name = "MoulConfig"
         url = "https://maven.notenoughupdates.org/releases/"
     }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+    }
 }
 
-configurations {
-    shadowModImpl
-    modImplementation.extendsFrom(shadowModImpl)
+fabricApi {
+    configureDataGeneration() {
+        client = true
+    }
+}
+
+def cleanMoulconfig = tasks.register('cleanMoulconfig', Zip) {
+    from({ zipTree(configurations.moulconfigClean.singleFile) })
+    exclude 'fabric.mod.json'
+    exclude 'moulconfig.accesswidener'
+    archiveFileName = 'moulconfig-clean.jar'
+    destinationDirectory = layout.buildDirectory.dir('shade')
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
-    }
+    mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-    modImplementation "net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}"
-    shadowModImpl(libs.moulconfig) {
-        exclude group: "org.jetbrains.kotlin"
-        exclude group: "org.jetbrains.kotlinx"
-    }
-    include(libs.moulconfig)
-}
+    modImplementation "maven.modrinth:modmenu:${project.modmenu_version}"
 
-tasks.shadowJar {
-    configurations = [project.configurations.shadowModImpl]
-    relocate "io.github.notenoughupdates.moulconfig", "sircow.noworldbordertint.deps.moulconfig"
-    archiveClassifier = 'shadow'
-    exclude "META-INF/versions/**"
-    mergeServiceFiles()
-}
+    modImplementation(libs.moulconfig)
+    modImplementation(libs.kotlin.stdlib)
 
-remapJar {
-    dependsOn tasks.shadowJar
-    inputFile = tasks.shadowJar.archiveFile
-    archiveClassifier = ""
+    moulconfigClean(libs.moulconfig)
+    shade(files(cleanMoulconfig.flatMap { it.archiveFile }))
+    shade(libs.kotlin.stdlib)
 }
 
 tasks.jar {
-    archiveClassifier = "nodeps"
+    archiveClassifier.set("unshaded")
+}
+
+tasks.shadowJar {
+    archiveClassifier.set("")
+    configurations = [project.configurations.shade]
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    relocate('io.github.notenoughupdates.moulconfig', 'sircow.noworldbordertint.shadow.moulconfig')
+    relocate('kotlin', 'sircow.noworldbordertint.shadow.kotlin')
+    mergeServiceFiles()
+}
+
+tasks.build {
+    dependsOn(tasks.shadowJar)
 }
 
 loom {
-    def aw = project(':common').file("src/main/resources/${mod_id}.accesswidener")
+    def aw = project(':common').file("src/main/resources/${mod_id}.classtweaker")
     if (aw.exists()) {
         accessWidenerPath.set(aw)
     }
     runs {
         client {
             client()
-            setConfigName('Fabric Client')
-            ideConfigGenerated(true)
-            runDir('runs/client')
-            programArgs "--tweakClass", "io.github.notenoughupdates.moulconfig.tweaker.DevelopmentResourceTweaker"
+            displayName = 'Fabric Client'
+            generateRunConfig = true
+            runDirectory = file('runs/client')
+            getProgramArguments().addAll(
+                    "--tweakClass",
+                    "io.github.notenoughupdates.moulconfig.tweaker.DevelopmentResourceTweaker"
+            )
         }
         server {
             server()
-            setConfigName('Fabric Server')
-            ideConfigGenerated(true)
-            runDir('runs/server')
+            displayName = 'Fabric Server'
+            generateRunConfig = true
+            runDirectory = file('runs/server')
         }
     }
 }
 
 def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
-['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements', 'includeInternal', 'modCompileClasspath'].each { variant ->
-    configurations.named("$variant") {
+['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements'].each { variant ->
+    configurations.named(variant) {
         attributes {
             attribute(loaderAttribute, 'fabric')
         }
     }
 }
+
 sourceSets.configureEach {
     [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant->
-        configurations.named("$variant") {
+        configurations.named(variant) {
             attributes {
                 attribute(loaderAttribute, 'fabric')
             }
-        }
-    }
-}
-loom.remapConfigurations.configureEach {
-    configurations.named(it.name) {
-        attributes {
-            attribute(loaderAttribute, 'fabric')
         }
     }
 }

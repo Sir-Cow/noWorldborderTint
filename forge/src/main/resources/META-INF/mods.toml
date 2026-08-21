@@ -1,14 +1,13 @@
 modLoader = "javafml"
 loaderVersion = "${forge_loader_version_range}"
 license = "${license}"
-issueTrackerURL="https://github.com/Sir-Cow/noWorldborderTint/issues"
-clientSideOnly=true
+issueTrackerURL = "https://github.com/Sir-Cow/noWorldborderTint/issues"
 [[mods]]
 modId = "${mod_id}"
 version = "${version}"
 displayName = "${mod_name}"
-#updateJSONURL=
-displayURL="https://github.com/Sir-Cow/noWorldborderTint"
+updateJSONURL = "https://api.modrinth.com/updates/CSMcTcKO/forge_updates.json"
+displayURL = "https://github.com/Sir-Cow/noWorldborderTint"
 logoFile = "icon.png"
 credits = "${credits}"
 authors = "${mod_author}"
