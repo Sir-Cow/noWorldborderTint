@@ -19,6 +19,9 @@
         "main": [
             "sircow.noworldbordertint.FabricNoWorldborderTint"
         ],
+        "client": [
+            "sircow.noworldbordertint.client.FabricNoWorldborderTintClient"
+        ],
         "modmenu": [
             "sircow.noworldbordertint.config.ModMenuCompat"
         ]
