@@ -5,42 +5,53 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.github.notenoughupdates.moulconfig.gui.GuiContext;
 import io.github.notenoughupdates.moulconfig.gui.GuiElementComponent;
 import io.github.notenoughupdates.moulconfig.gui.MoulConfigEditor;
-import io.github.notenoughupdates.moulconfig.platform.MoulConfigScreenComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import sircow.noworldbordertint.CommonClass;
 
+import java.lang.reflect.Constructor;
+
 public class ConfigGuiManager {
     public static MoulConfigEditor<NWTConfig> editor = null;
+
+    private static Screen createMoulConfigScreen(Component title, GuiContext context, Screen parent) {
+        try {
+            Class<?> clazz = Class.forName("io.github.notenoughupdates.moulconfig.platform.MoulConfigScreenComponent");
+            Constructor<?> ctor = clazz.getDeclaredConstructor(
+                    Component.class,
+                    GuiContext.class,
+                    Screen.class
+            );
+            return (Screen) ctor.newInstance(title, context, parent);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create MoulConfigScreenComponent", e);
+        }
+    }
 
     public static void openConfigGui(String search) {
         CommonClass.configManager.ensureProcessor();
         if (editor == null) editor = new MoulConfigEditor<>(CommonClass.configManager.processor);
         if (search != null) editor.search(search);
 
-        MoulConfigScreenComponent screen = new MoulConfigScreenComponent(Component.empty(), new GuiContext(new GuiElementComponent(editor)), null) {
-            @Override
-            public void onClose() {
-                super.onClose();
-                CommonClass.configManager.saveConfig();
-            }
-        };
+        Screen screen = createMoulConfigScreen(
+                Component.empty(),
+                new GuiContext(new GuiElementComponent(editor)),
+                null
+        );
 
         Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreen(screen));
     }
 
-    public static MoulConfigScreenComponent createConfigScreen(Screen previousScreen) {
+    public static Screen createConfigScreen(Screen previousScreen) {
         CommonClass.configManager.ensureProcessor();
         if (editor == null) editor = new MoulConfigEditor<>(CommonClass.configManager.processor);
 
-        return new MoulConfigScreenComponent(Component.empty(), new GuiContext(new GuiElementComponent(editor)), previousScreen) {
-            @Override
-            public void onClose() {
-                super.onClose();
-                CommonClass.configManager.saveConfig();
-            }
-        };
+        return createMoulConfigScreen(
+                Component.empty(),
+                new GuiContext(new GuiElementComponent(editor)),
+                previousScreen
+        );
     }
 
     public static <S> void registerCommands(CommandDispatcher<S> dispatcher) {

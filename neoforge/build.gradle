@@ -1,6 +1,7 @@
 plugins {
     id 'multiloader-loader'
     id 'net.neoforged.moddev'
+    id 'com.gradleup.shadow' version '9.6.1'
 }
 
 neoForge {
@@ -37,6 +38,54 @@ neoForge {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+configurations {
+    shade
+    moulconfigClean {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+def devMoulconfig = tasks.register('devMoulconfig', Sync) {
+    from({ zipTree(configurations.moulconfigClean.singleFile) }) {
+        include 'io/github/notenoughupdates/moulconfig/**'
+        include 'assets/moulconfig/**'
+        include 'META-INF/*.kotlin_module'
+    }
+    into layout.buildDirectory.dir('moulconfig/dev')
+}
+sourceSets.main.output.dir(builtBy: devMoulconfig, layout.buildDirectory.dir('moulconfig/dev'))
+
+repositories {
+    maven {
+        name = "MoulConfig"
+        url = "https://maven.notenoughupdates.org/releases/"
+    }
+}
+
+dependencies {
+    compileOnly(libs.moulconfig)
+    compileOnly(libs.kotlin.stdlib)
+    moulconfigClean("org.notenoughupdates.moulconfig:modern-${minecraft_version}:4.7.2:named")
+    shade(libs.kotlin.stdlib)
+    runtimeOnly(libs.kotlin.stdlib)
+}
+
+tasks.named('jar', Jar) {
+    archiveClassifier.set("unshaded")
+}
+
+tasks.shadowJar {
+    archiveClassifier.set("")
+    configurations = [project.configurations.shade]
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    mergeServiceFiles()
+}
+
+tasks.build {
+    dependsOn(tasks.shadowJar)
+}
 
 def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
 ['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements'].each { variant ->

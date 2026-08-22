@@ -57,7 +57,7 @@ tasks.jar {
 }
 
 tasks.shadowJar {
-    archiveClassifier.set("")
+    archiveClassifier.set("shadow")
     configurations = [project.configurations.shade]
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     relocate('io.github.notenoughupdates.moulconfig', 'sircow.noworldbordertint.shadow.moulconfig')
@@ -65,8 +65,14 @@ tasks.shadowJar {
     mergeServiceFiles()
 }
 
-tasks.build {
+tasks.remapJar {
     dependsOn(tasks.shadowJar)
+    inputFile.set(tasks.shadowJar.archiveFile)
+    archiveClassifier.set("")
+}
+
+tasks.build {
+    dependsOn(tasks.remapJar)
 }
 
 loom {

@@ -17,7 +17,10 @@
     "environment": "client",
     "entrypoints": {
         "main": [
-            "sircow.noworldbordertint.NoWorldborderTint"
+            "sircow.noworldbordertint.FabricNoWorldborderTint"
+        ],
+        "client": [
+            "sircow.noworldbordertint.client.FabricNoWorldborderTintClient"
         ],
         "modmenu": [
             "sircow.noworldbordertint.config.ModMenuCompat"
@@ -27,6 +30,7 @@
         "noworldbordertint.mixins.json",
         "noworldbordertint.fabric.mixins.json"
     ],
+    "accessWidener": "noworldbordertint.classtweaker",
     "depends": {
         "fabricloader": ">=${fabric_loader_version}",
         "fabric-api": "*",

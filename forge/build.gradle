@@ -1,7 +1,7 @@
 plugins {
     id 'multiloader-loader'
-    id 'net.minecraftforge.gradle' version '[7.0.34,8.0)'
-    id 'net.minecraftforge.jarjar' version '0.2.3'
+    id 'net.minecraftforge.gradle' version '7.0.34'
+    id 'com.gradleup.shadow' version '9.6.1'
 }
 base {
     archivesName = "${mod_id}-forge-${minecraft_version}"
@@ -12,7 +12,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 minecraft {
     mappings channel: 'official', version: minecraft_version
 
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg').exists()
+    accessTransformer.from(project(':common').file('src/main/resources/META-INF/accesstransformer.cfg'))
 
     runs {
         configureEach {
@@ -38,20 +38,48 @@ minecraft {
 
 sourceSets.main.resources { srcDir layout.projectDirectory.dir('src/generated/resources') }
 
+configurations {
+    shade
+    moulconfigClean {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+def devMoulconfig = tasks.register('devMoulconfig', Sync) {
+    from({ zipTree(configurations.moulconfigClean.singleFile) }) {
+        include 'io/github/notenoughupdates/moulconfig/**'
+        include 'assets/moulconfig/**'
+        include 'META-INF/*.kotlin_module'
+    }
+    into layout.buildDirectory.dir('moulconfig/dev')
+}
+sourceSets.main.resources.srcDir(files(layout.buildDirectory.dir('moulconfig/dev')).builtBy(devMoulconfig))
+
 repositories {
     minecraft.mavenizer(it)
     maven fg.minecraftLibsMaven
     maven fg.forgeMaven
     mavenCentral()
+    maven {
+        name = "MoulConfig"
+        url = "https://maven.notenoughupdates.org/releases/"
+    }
 }
 
 dependencies {
     implementation minecraft.dependency("net.minecraftforge:forge:${minecraft_version}-${forge_version}")
     compileOnly project(':common')
     annotationProcessor 'net.minecraftforge:eventbus-validator:7.0.5'
+    compileOnly(libs.moulconfig)
+    compileOnly(libs.kotlin.stdlib)
+    moulconfigClean("org.notenoughupdates.moulconfig:modern-${minecraft_version}:4.7.2:named")
+    shade(libs.kotlin.stdlib)
+    runtimeOnly(libs.kotlin.stdlib)
 }
 
 tasks.named('jar', Jar) {
+    archiveClassifier.set("unshaded")
     manifest {
         attributes([
                 "MixinConfigs": "${mod_id}.mixins.json,${mod_id}.forge.mixins.json"
@@ -59,9 +87,20 @@ tasks.named('jar', Jar) {
     }
 }
 
-jarJar.register() {
-    archiveClassifier = null
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+tasks.shadowJar {
+    archiveClassifier.set("")
+    configurations = [project.configurations.shade]
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    mergeServiceFiles()
+    manifest {
+        attributes([
+                "MixinConfigs": "${mod_id}.mixins.json,${mod_id}.forge.mixins.json"
+        ])
+    }
+}
+
+tasks.build {
+    dependsOn(tasks.shadowJar)
 }
 
 def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)

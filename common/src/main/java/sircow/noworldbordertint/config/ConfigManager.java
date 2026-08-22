@@ -6,14 +6,14 @@ import io.github.notenoughupdates.moulconfig.processor.BuiltinMoulConfigGuis;
 import io.github.notenoughupdates.moulconfig.processor.ConfigProcessorDriver;
 import io.github.notenoughupdates.moulconfig.processor.MoulConfigProcessor;
 import org.apache.commons.io.FileUtils;
-import sircow.noworldbordertint.NoWorldborderTint;
+import sircow.noworldbordertint.CommonClass;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class ConfigManager {
-    private static final File configFile = new File("config/noworldbordertint/noworldbordertint.json");
+    private static final File configFile = new File("config/noworldbordertint.json");
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
     public MoulConfigProcessor<NWTConfig> processor;
 
@@ -21,18 +21,21 @@ public class ConfigManager {
         if (configFile.exists()) {
             try {
                 String json = FileUtils.readFileToString(configFile, StandardCharsets.UTF_8);
-                NoWorldborderTint.config = gson.fromJson(json, NWTConfig.class);
+                CommonClass.config = gson.fromJson(json, NWTConfig.class);
             }
             catch (Exception e) {
                 e.printStackTrace();
-                NoWorldborderTint.config = new NWTConfig();
+                CommonClass.config = new NWTConfig();
             }
         }
         else {
-            NoWorldborderTint.config = new NWTConfig();
+            CommonClass.config = new NWTConfig();
             saveConfig();
         }
-        recreateProcessor();
+    }
+
+    public void ensureProcessor() {
+        if (processor == null) recreateProcessor();
     }
 
     public void saveConfig() {
@@ -42,7 +45,7 @@ public class ConfigManager {
                 throw new IOException("Failed to create directory: " + parent);
             }
 
-            FileUtils.writeStringToFile(configFile, gson.toJson(NoWorldborderTint.config), StandardCharsets.UTF_8);
+            FileUtils.writeStringToFile(configFile, gson.toJson(CommonClass.config), StandardCharsets.UTF_8);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -50,10 +53,10 @@ public class ConfigManager {
     }
 
     public void recreateProcessor() {
-        processor = new MoulConfigProcessor<>(NoWorldborderTint.config);
+        processor = new MoulConfigProcessor<>(CommonClass.config);
         BuiltinMoulConfigGuis.addProcessors(processor);
         ConfigProcessorDriver driver = new ConfigProcessorDriver(processor);
         driver.warnForPrivateFields = false;
-        driver.processConfig(NoWorldborderTint.config);
+        driver.processConfig(CommonClass.config);
     }
 }

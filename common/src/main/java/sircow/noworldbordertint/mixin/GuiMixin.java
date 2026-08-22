@@ -13,27 +13,21 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import sircow.noworldbordertint.CommonClass;
 
 @Mixin(Gui.class)
 public class GuiMixin {
     @Shadow public float vignetteBrightness;
     @Shadow @Final private static Identifier VIGNETTE_LOCATION;
-    @Inject(method = "renderVignette", at = @At("HEAD"), cancellable = true)
-    private void sir_cow$modifyVignette(GuiGraphics guiGraphics, Entity entity, CallbackInfo ci) {
-        int i;
-        float h = this.vignetteBrightness;
-        h = Mth.clamp(h, 0.0F, 1.0F);
-        i = ARGB.colorFromFloat(1.0F, h, h, h);
 
-        guiGraphics.blit(
-                RenderPipelines.VIGNETTE,
-                VIGNETTE_LOCATION, 0, 0, 0.0F, 0.0F,
-                guiGraphics.guiWidth(),
-                guiGraphics.guiHeight(),
-                guiGraphics.guiWidth(),
-                guiGraphics.guiHeight(),
-                i
-        );
-        ci.cancel();
+    @Inject(method = "renderVignette", at = @At("HEAD"), cancellable = true)
+    private void nwbt$modifyVignette(GuiGraphics graphics, Entity camera, CallbackInfo ci) {
+        if (CommonClass.config.mainCategory.hideTint) {
+            float brightness = Mth.clamp(this.vignetteBrightness, 0.0F, 1.0F);
+            int color = ARGB.colorFromFloat(1.0F, brightness, brightness, brightness);
+
+            graphics.blit(RenderPipelines.VIGNETTE, VIGNETTE_LOCATION, 0, 0, 0.0F, 0.0F, graphics.guiWidth(), graphics.guiHeight(), graphics.guiWidth(), graphics.guiHeight(), color);
+            ci.cancel();
+        }
     }
 }
