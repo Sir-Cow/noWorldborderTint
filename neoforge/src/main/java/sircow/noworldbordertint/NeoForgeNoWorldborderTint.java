@@ -12,15 +12,22 @@ import sircow.noworldbordertint.config.ConfigGuiManager;
 @Mod(Constants.MOD_ID)
 public class NeoForgeNoWorldborderTint {
     public NeoForgeNoWorldborderTint(IEventBus eventBus) {
+        CommonClass.createConfig();
         CommonClass.init();
     }
 
     @Mod(value = Constants.MOD_ID, dist = Dist.CLIENT)
     public static class Client {
         public Client(ModContainer container) {
-            CommonClass.createConfig();
-            container.registerExtensionPoint(IConfigScreenFactory.class, (modContainer, modListScreen) -> ConfigGuiManager.createConfigScreen(modListScreen));
-            NeoForge.EVENT_BUS.addListener(RegisterClientCommandsEvent.class, event -> ConfigGuiManager.registerCommands(event.getDispatcher()));
+            container.registerExtensionPoint(
+                    IConfigScreenFactory.class,
+                    (modContainer, modListScreen) -> ConfigGuiManager.createConfigScreen(modListScreen)
+            );
+
+            NeoForge.EVENT_BUS.addListener(
+                    RegisterClientCommandsEvent.class,
+                    event -> ConfigGuiManager.registerCommands(event.getDispatcher())
+            );
         }
     }
 }
