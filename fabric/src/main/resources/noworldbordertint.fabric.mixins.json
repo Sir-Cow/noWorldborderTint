@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "sircow.noworldbordertint.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [],
   "client": [],
   "server": [],
@@ -13,4 +13,3 @@
     "requireAnnotations": true
   }
 }
-  

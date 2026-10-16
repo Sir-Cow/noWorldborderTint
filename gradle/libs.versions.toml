@@ -1,9 +1,9 @@
 [versions]
 # https://github.com/NotEnoughUpdates/MoulConfig/tags
-moulconfig = "4.7.2"
+moulconfig = "4.8.0"
 # https://kotlinlang.org/docs/releases.html
-kotlin = "2.4.10"
+kotlin = "2.4.21"
 
 [libraries]
-moulconfig = { module = "org.notenoughupdates.moulconfig:modern-26.2", version.ref = "moulconfig" }
+moulconfig = { module = "org.notenoughupdates.moulconfig:modern-26.3", version.ref = "moulconfig" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }

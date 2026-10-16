@@ -1,8 +1,9 @@
 plugins {
     id 'multiloader-loader'
-    id 'net.minecraftforge.gradle' version '7.0.34'
+    id 'net.minecraftforge.gradle' version '7.0.40'
     id 'com.gradleup.shadow' version '9.6.1'
 }
+
 base {
     archivesName = "${mod_id}-forge-${minecraft_version}"
 }
@@ -70,7 +71,7 @@ repositories {
 dependencies {
     implementation minecraft.dependency("net.minecraftforge:forge:${minecraft_version}-${forge_version}")
     compileOnly project(':common')
-    annotationProcessor 'net.minecraftforge:eventbus-validator:7.0.5'
+    annotationProcessor 'net.minecraftforge:eventbus-validator:7.0.6'
     compileOnly(libs.moulconfig)
     compileOnly(libs.kotlin.stdlib)
     moulconfigClean(libs.moulconfig)
